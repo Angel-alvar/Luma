@@ -1,53 +1,34 @@
-# 📸 Luma
+# Luma
 
-**LUMA** es una aplicación web construida con Flask para atraer potenciales clientes que necesiten un Diseñp grafico.
+Sitio web para negocio de impresiones — proyecto para la materia “Taller de Base de Datos”
 
----
- 🌐***Despliege en Produccion***
- 
-## 🚀 Tecnologías utilizadas
+## 📄 Descripción
 
-- Python 3.x
-- Flask
-- HTML5 / CSS3
-- JavaScript
-- Bootstrap (opcional)
-- Git / GitHub
+Luma es una aplicación web construida con Flask (Python) que permite presentar un portafolio o catálogo de servicios gráficos.  
+El objetivo del proyecto es ofrecer una plataforma simple donde potenciales clientes puedan ver los servicios disponibles, ejemplos de trabajos gráficos y la información de contacto del negocio.  
 
----
+## 🚀 Comenzar / Instalación
 
-## 📁 Estructura del proyecto
-Luma/
-├── app/
-│ ├── static/
-│ │ ├── css/
-│ │ └── images/
-│ ├── templates/
-│ └── app.py
-├── requirements.txt
-└── README.md
+Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo o pruebas.
 
----
+### Pre-requisitos
 
-## ⚙️ Instalación y ejecución
+- Python 3.x  
+- (Opcional) Un entorno virtual Python  
 
-1. **Clonar el repositorio**
+### Instalación y ejecución
+
 ```bash
+# Clonar el repositorio
 git clone https://github.com/Angel-alvar/Luma.git
-cd Signa
-```
+cd Luma
 
-2. **Crear el entorno visual**
-Abrir consola:
-```bash
+# (Opcional) Crear y activar un entorno virtual
 python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
-```
-3. **Instalar las dependencias**
-``` bash
-pip instal -r requirement.txt
-```
-4. Ejecutar la app
-``` bash
+source venv/bin/activate   # En Windows: venv\Scripts\activate
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Ejecutar la aplicación
 python app/app.py
-```
