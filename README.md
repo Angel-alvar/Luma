@@ -1,6 +1,6 @@
-# 📸 Signa
+# 📸 Luma
 
-**Signa** es una aplicación web construida con Flask para atraer potenciales clientes que necesiten un letrero publicitario.
+**LUMA** es una aplicación web construida con Flask para atraer potenciales clientes que necesiten un Diseñp grafico.
 
 ---
  🌐***Despliege en Produccion***
@@ -17,7 +17,7 @@
 ---
 
 ## 📁 Estructura del proyecto
-Signa/
+Luma/
 ├── app/
 │ ├── static/
 │ │ ├── css/
@@ -33,7 +33,7 @@ Signa/
 
 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/Angel-alvar/Signa.git
+git clone https://github.com/Angel-alvar/Luma.git
 cd Signa
 ```
 
