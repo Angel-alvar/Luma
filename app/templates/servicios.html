@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Servicios|GrupoSigna</title>
+    <title>Servicios|Luma</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">    
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estiloinicio.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/acercastyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/headerfooter.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/serviciostyle.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -20,100 +20,91 @@
 {% include 'header.html' %}
  <!-- Contenido princial-->
     <section class="hero animate__animated animate__fadeIn">
-    <h1>Nuestros Servicios</h1>
-    <h2>Cada detalle cuenta, calidad que se nota.</h2>
+    <h1>Servicios de Impresión</h1>
+    <h2>Calidad y diseño que hacen la diferencia</h2>
 </section>
 
 <!-- Sección de Servicios -->
-   <div class="servicios-container">
+<div class="servicios-container">
     <div class="servicios-grid">
         <div class="servicio-card animate__animated animate__fadeInUp">
-            <img src="https://scontent.ftij1-3.fna.fbcdn.net/v/t51.75761-15/480020287_18292785277245275_2645180491365583910_n.jpg?stp=dst-jpg_tt6&_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHWjIULnWV6Jwex5VuTzW0cHIIOTr-c1agcgg5Ov5zVqNvAXT75TdXDgAlmyhfi_6W2kLMdvJxz2BmwhxsXrUyS&_nc_ohc=WGxmEGn26OIQ7kNvwFJ738L&_nc_oc=AdlWv1ztms6s8P9Yti3e06fBtTSYqfqlyyBAybtFoCZkQUk724wFEB5SYnhgR9Y60e8&_nc_zt=23&_nc_ht=scontent.ftij1-3.fna&_nc_gid=oSuOc4fve181-iQVGsWfXA&oh=00_AfR8fIv5Jm02YY_RvaoS0UJVvDIbemTV95OMQMQB095QVQ&oe=68918DBD  " alt="Letras de canal">
+            <img src="{{ url_for('static', filename='images/servicio1.jpg') }}" alt="Impresión Digital">
             <div class="servicio-content">
-                <h2>Letras de canal</h2>
-                <p>Fabricamos letras de canal personalizadas con materiales de alta calidad para destacar tu marca con elegancia y profesionalismo.</p>
+                <h2>Impresión Digital</h2>
+                <p>Impresión de alta calidad para pequeños y grandes formatos. Ideal para folletos, carteles, tarjetas y más.</p>
             </div>
         </div>
         
         <div class="servicio-card animate__animated animate__fadeInUp animate__delay-1s">
-            <img src="https://scontent.ftij1-3.fna.fbcdn.net/v/t51.82787-15/523697214_18309917767245275_6630607110022414118_n.webp?stp=dst-jpg_tt6&_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGJLeqBGTuEmpXcDsF6p_fuHkV7jwM6q2EeRXuPAzqrYRpfX79KwkVmoVbH0WPaCWTHvIjvnLyeEJmWRCIm49q0&_nc_ohc=IoSYViGwmRcQ7kNvwFAAkOw&_nc_oc=AdnZRxrZf6G2C9g4qh1nz9B-tWNzKmzPHp7MpxC9RE2NM_u0VHIOk9To6YuEjNDO1Ok&_nc_zt=23&_nc_ht=scontent.ftij1-3.fna&_nc_gid=41A_PpJ1llpIWT6ooImXlw&oh=00_AfTut4TsERy4D4JxpVExrIdeQXb92XRoCHSTkC_YuSgdJw&oe=68919396" alt="Letreros luminosos">
+            <img src="{{ url_for('static', filename='images/servicio2.jpg') }}" alt="Papelería Corporativa">
             <div class="servicio-content">
-                <h2>Letreros luminosos</h2>
-                <p>Ofrecemos letreros luminosos LED de bajo consumo que iluminan tu negocio día y noche, aumentando tu visibilidad.</p>
+                <h2>Papelería Corporativa</h2>
+                <p>Tarjetas de presentación, hojas membretadas, sobres, carpetas y todo lo necesario para tu imagen empresarial.</p>
             </div>
         </div>
         
         <div class="servicio-card animate__animated animate__fadeInUp animate__delay-2s">
-            <img src="https://scontent.ftij1-3.fna.fbcdn.net/v/t39.30808-6/505236353_9595482743907731_2604547345484821639_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=cf85f3&_nc_eui2=AeGOQJ2GmQFu9UxJ0q5VbTVar8-27s5Jpbqvz7buzkmluuj3QzxYwGWzGosaJJRk_FJnynMCgxnss-eRJu33jjX4&_nc_ohc=q92482ZbmOYQ7kNvwFZGS6r&_nc_oc=AdlGXNxUeMKJlzQQzuvnPFPSxAuUjK7nNNcJQxkLaocSYclcD76gqOMDLx19iXYNVgQ&_nc_zt=23&_nc_ht=scontent.ftij1-3.fna&_nc_gid=b-hn6DFkw8GEwb_z1OsyUA&oh=00_AfSII-rfz77phiI0zfgKfTxaXHu8M3LAmM8OUo-09R8Oug&oe=689173DB" alt="Letreros 3D">
+            <img src="{{ url_for('static', filename='images/servicio3.jpeg') }}" alt="Gran Formato">
             <div class="servicio-content">
-                <h2>Letreros 3D</h2>
-                <p>Diseñamos letreros 3D únicos y modernos que capturan la atención de tus clientes y diferencian tu negocio.</p>
+                <h2>Impresión Gran Formato</h2>
+                <p>Banners, lonas, vinilos y displays para exposiciones y publicidad exterior.</p>
             </div>
         </div>
 
-         <div class="servicio-card animate__animated animate__fadeInUp animate__delay-2s">
-            <img src="https://vinilosparapared.pe/wp-content/uploads/2024/05/Impresion-de-Vinilos-Adhesivo-Economicos.webp "alt="Impresion Vinil">
+        <div class="servicio-card animate__animated animate__fadeInUp">
+            <img src="{{ url_for('static', filename='images/servicio4.jpg') }}" alt="Productos Personalizados">
             <div class="servicio-content">
-                <h2>Impresiones en vinil</h2>
-                <p>Flexible y resistente, excelente para pancartas y señalizacion</p>
+                <h2>Productos Personalizados</h2>
+                <p>Personalización de tazas, playeras, mouse pads y artículos promocionales.</p>
             </div>
         </div>
 
-            <div class="servicio-card animate__animated animate__fadeInUp animate__delay-2s">
-            <img src="https://scontent.ftij1-3.fna.fbcdn.net/v/t39.30808-6/505788368_9595482533907752_5667780355095657284_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=cf85f3&_nc_eui2=AeGbyRiZ-5OWAPMnQqN6fWb88hKEunRVLwzyEoS6dFUvDNuXdH2eLpULdVLpQAahzfbz4Uc70nk83hAu6QrYdjgv&_nc_ohc=8M8rEu7tPnYQ7kNvwEVIe-M&_nc_oc=AdkxJ0fju_5FR7ymj0vjsP7NFIKeTyvRoGgjTIx2OO0nhsmhrk-UNfym7jS_7nUOnXI&_nc_zt=23&_nc_ht=scontent.ftij1-3.fna&_nc_gid=hdg23qMRFMDe8NhSgT8nNg&oh=00_AfRsTk_-NGFeDUcTs6blFInpoWumZwSKZr0hyH3MoQdHig&oe=6891A117 "alt="Rotulacion">
+        <div class="servicio-card animate__animated animate__fadeInUp animate__delay-1s">
+            <img src="{{ url_for('static', filename='images/servicio5.jpg') }}" alt="Diseño Gráfico">
             <div class="servicio-content">
-                <h2>Rotulacion</h2>
-                <p>Rotular el vehículo de tu empresa es una manera de publicitarte fuera de tu establecimiento. Ya sea impreso o con corte en vinil, la rotulación vehicular es una buena estrategia para vender más...</p>
+                <h2>Diseño Gráfico</h2>
+                <p>Creación de logotipos, identidad corporativa y diseño editorial profesional.</p>
             </div>
         </div>
 
         <div class="servicio-card animate__animated animate__fadeInUp animate__delay-2s">
-            <img src="https://scontent.ftij1-3.fna.fbcdn.net/v/t51.82787-15/517290620_18308511793245275_909516442306418212_n.webp?stp=dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFqLtpvbZfNZpKuNMtBQAUZTd7QsrjsMhxN3tCyuOwyHC4U0nRRvx4lfgj15qvFVg3y6vYqW2ELPFM9y9oIXNZ7&_nc_ohc=rnsn9kGDA8kQ7kNvwFcfZuu&_nc_oc=AdmdQmLCfQQ0KELGnx0ILYQSA00lT5zohy-YfN4MhUMiB-kYhuufrsD7n8-IHKiuIwE&_nc_zt=23&_nc_ht=scontent.ftij1-3.fna&_nc_gid=1mR2B7JuWtlCOCNq6SUtVQ&oh=00_AfSzKBYGIDgYQdsDGYIbVmcDMVWPCnsBD3xMyoOCT4v1Bw&oe=68917FBB "alt="Señalizacion">
-         <div class="servicio-content">
-                <h2>Señalizacion</h2>
-                <p>Señales informativas, De Emergencia, Precaucion, Prohibitivas, entre muchas otras.</p>
+            <img src="{{ url_for('static', filename='images/servicio6.jpg') }}" alt="Acabados Especiales">
+            <div class="servicio-content">
+                <h2>Acabados Especiales</h2>
+                <p>Barniz UV, hot stamping, troquelado y laminado para dar un toque único a tus impresos.</p>
             </div>
         </div>
     </div>
 
-        <h2>Materiales de alta calidad</h2>
-        <p>Utilizamos materiales de primera calidad para garantizar la durabilidad y resistencia de nuestros productos.</p>
-<div class="materiales-grid">
+    <h2>Materiales Premium</h2>
+    <p>Trabajamos con los mejores materiales para garantizar resultados profesionales.</p>
+    <div class="materiales-grid">
         <div class="material-card">
-            <img src="https://aislamart.mx/wp-content/uploads/2020/10/Panel-de-PVC-rigido-RP-300.png" alt="PVC">
+            <img src="{{ url_for('static', filename='images/papel.jpg') }}" alt="Papeles Especiales">
             <div class="material-body">
-                <h3 class="card-title">PVC (Cloruro de polivinilo)</h3>
-                <p class="card-text">Material ligero, resistente a la intemperie y fácil de trabajar. Perfecto para letreros duraderos con acabados precisos.</p>
+                <h3 class="card-title">Papeles Especiales</h3>
+                <p class="card-text">Amplia variedad de gramajes y texturas para todo tipo de proyectos.</p>
             </div>
         </div>
         
         <div class="material-card">
-            <img src="https://www.alucobond.com/assets/images/3/3a-composites-arch-content-produkte_04-858fc592.jpg" alt="Alucobond">
+            <img src="{{ url_for('static', filename='images/material2.png') }}" alt="Viniles">
             <div class="material-body">
-                <h3 class="card-title">Alucobond</h3>
-                <p class="card-text">Paneles compuestos de aluminio de alta resistencia, ideales para fachadas y letreros exteriores de larga duración.</p>
+                <h3 class="card-title">Viniles de Alta Calidad</h3>
+                <p class="card-text">Viniles adhesivos durables para interior y exterior.</p>
             </div>
         </div>
         
         <div class="material-card">
-            <img src="https://static.wixstatic.com/media/40ea86_a30be661ee9b4eec8da1021893435225~mv2.jpg/v1/fill/w_640,h_474,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/40ea86_a30be661ee9b4eec8da1021893435225~mv2.jpg" alt="Madera">
+            <img src="{{ url_for('static', filename='images/material3.jpg') }}" alt="Textiles">
             <div class="material-body">
-                <h3 class="card-title">Madera Premium</h3>
-                <p class="card-text">Aporta calidez y un acabado natural exclusivo, con tratamientos especiales para resistir las condiciones climáticas.</p>
-            </div>
-        </div>
-        
-        <div class="material-card">
-            <img src="https://metalacrilicos.com/images/laminas-acrilico.jpg" alt="Acrílico">
-            <div class="material-body">
-                <h3 class="card-title">Acrílico de Primera</h3>
-                <p class="card-text">Material versátil y resistente, perfecto para letreros luminosos y aplicaciones donde se busca transparencia o colores vibrantes.</p>
+                <h3 class="card-title">Textiles para Sublimación</h3>
+                <p class="card-text">Telas y materiales especiales para personalización textil.</p>
             </div>
         </div>
     </div>
-</section>
 </div>
-    {%include 'footer.html'%}
+    {% include 'footer.html'%}
 <script src="{{ url_for('static', filename='js/slideshow.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 

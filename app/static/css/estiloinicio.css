@@ -17,53 +17,7 @@
   
 
 /* --------- Header --------- */
-header {
-    width: 100%;
-    background: #2b2d42;
-    box-shadow: 0 2px 8px rgba(43,45,66,0.10);
-    padding: 0;
-    margin-bottom: 30px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
 
-header ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    height: 60px;
-}
-
-header li {
-    margin: 0 18px;
-    border-radius: 8px;
-    transition: background 0.3s, transform 0.2s;
-    float: none;
-}
-
-header li a {
-    color: #fff;
-    font-family: 'Montserrat', Arial, sans-serif;
-    font-weight: bold;
-    font-size: 1.1rem;
-    text-decoration: none;
-    padding: 12px 22px;
-    display: block;
-    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
-    transition: background 0.3s, transform 0.2s;
-    border-radius: 8px;
-}
-
-header li a:hover {
-    background: #3f3f3f;
-    color: #d32f2f;
-    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
-    transform: scale(1.07);
-}
 
 body {
             font-family: 'Montserrat', Arial, sans-serif;
@@ -101,7 +55,7 @@ body {
         .titulo {
             font-family: Raleway, sans-serif;
             font-size: 3rem;
-            color: #d32f2f;
+            color: #ff6347;
             letter-spacing: 3px;
             margin-bottom: 10px;
             transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
@@ -110,7 +64,7 @@ body {
 
         .bienvenida {
             font-size: 1.3rem;
-            color: #d32f2f;
+            color: #ff6347;
             margin-bottom: 18px;
             font-weight: bold;
             text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
@@ -121,9 +75,10 @@ body {
             font-family: 'Montserrat', Arial, sans-serif;
             color: #313131;
             margin-bottom: 28px;
-            background: linear-gradient(135deg, #d32f2f 0%, #999999 100%);
+            background: linear-gradient(135deg, #ff6347 0%, #ffc0cb 100%);
             padding: 12px 18px;
             border-radius: 8px;
+            color: white;
         }
 
 
@@ -374,41 +329,7 @@ li a:hover {
             text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3)
         }
 
-        .footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 40px;
-    padding: 20px 0;
-    flex-wrap: wrap;
-}
-
-.footer-col {
-    flex: 1 1 200px;
-    min-width: 200px;
-}
-
-.footer-col img {
-    max-width: 120px;
-    margin-bottom: 10px;
-}
-
-footer {
-    background: #222;
-    color: #fff;
-    padding: 30px 10px 10px 10px;
-    margin-top: 40px;
-}
-
-footer a {
-    color: #fff;
-    text-decoration: none;
-    margin-right: 10px;
-}
-
-footer a:hover {
-    color: #ff5050;
-}
+      
 
 /* HTML: <div class="loader"></div> */
 .loader {
@@ -427,371 +348,106 @@ footer a:hover {
 }
 
 
+    /* Variables actualizadas */
     :root {
-            --color-primario: #1a2a6c;
-            --color-secundario: #b21f1f;
-            --color-acento: #d32f2f;
-            --color-texto: #333;
-            --color-claro: #fafaf8;
-            --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transicion: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--color-texto);
-            overflow-x: hidden;
-            background-color: #fff;
-        }
-        
-        h1, h2, h3, h4 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* NAVBAR BIEN PERRONA */
-        .navbar-custom {
-            background-color: white !important;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar-custom.scrolled {
-            padding: 10px 0;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .nav-link {
-            color: var(--color-texto) !important;
-            font-weight: 600;
-            margin: 0 10px;
-            position: relative;
-            padding: 5px 0 !important;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 3px;
-            bottom: 0;
-            left: 0;
-            background-color: var(--color-acento);
-            transition: var(--transicion);
-        }
-        
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        
-        .nav-link.active {
-            color: var(--color-primario) !important;
-        }
-        
-        /* HERO BIEN PINCHE PADRÍSIMO */
-        .hero {
-            background: linear-gradient(135deg, rgba(26, 42, 108, 0.9), rgba(178, 31, 31, 0.8)), url('{{ url_for("static", filename="images/hero-servicios.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-            padding: 150px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
-            text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        .hero h2 {
-            font-size: 1.8rem;
-            font-weight: 300;
-            max-width: 800px;
-            margin: 0 auto 40px;
-        }
-        
-        .btn-hero {
-            background-color: var(--color-acento);
-            color: var(--color-texto);
-            font-weight: 600;
-            padding: 12px 35px;
-            border-radius: 50px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: var(--transicion);
-            border: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn-hero:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            background-color: white;
-            color: var(--color-primario);
-        }
-        
-        /* SERVICIOS QUE SE VEN BIEN CHIDOS */
-        .servicios-section {
-            padding: 100px 0;
-            background-color: var(--color-claro);
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 70px;
-        }
-        
-        .section-title h2 {
-            font-size: 2.8rem;
-            color: var(--color-primario);
-            position: relative;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-        
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            width: 80px;
-            height: 4px;
-            background-color: var(--color-acento);
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .section-title p {
-            font-size: 1.2rem;
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .servicio-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: var(--sombra);
-            transition: var(--transicion);
-            margin-bottom: 30px;
-            border: none;
-        }
-        
-        .servicio-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .servicio-img {
-            height: 250px;
-            object-fit: cover;
-            width: 100%;
-            transition: transform 0.5s ease;
-        }
-        
-        .servicio-card:hover .servicio-img {
-            transform: scale(1.05);
-        }
-        
-        .servicio-body {
-            padding: 25px;
-        }
-        
-        .servicio-body h3 {
-            color: var(--color-primario);
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-        
-        .servicio-body p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        
-        .btn-servicio {
-            background-color: var(--color-primario);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: var(--transicion);
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .btn-servicio:hover {
-            background-color: var(--color-secundario);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn-servicio i {
-            margin-left: 8px;
-            transition: transform 0.3s ease;
-        }
-        
-        .btn-servicio:hover i {
-            transform: translateX(5px);
-        }
-        
-        /* MATERIALES BIEN PERRONES */
-        .materiales-section {
-            padding: 100px 0;
-            background: white;
-        }
-        
-        .material-card {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: var(--sombra);
-            transition: var(--transicion);
-            margin-bottom: 30px;
-            background-color: var(--color-claro);
-        }
-        
-        .material-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .material-img {
-            height: 200px;
-            object-fit: contain;
-            padding: 30px;
-            background-color: white;
-        }
-        
-        .material-body {
-            padding: 25px;
-            text-align: center;
-        }
-        
-        .material-body h4 {
-            color: var(--color-primario);
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
-        
-        .material-body p {
-            color: #666;
-        }
-        
-        /* CTA QUE TE DAN GANAS DE LLAMAR */
-        .cta-section {
-            background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('{{ url_for("static", filename="images/pattern.png") }}');
-            opacity: 0.1;
-            z-index: 1;
-        }
-        
-        .cta-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .cta-section h2 {
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .cta-section p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 40px;
-            opacity: 0.9;
-        }
-        
-        .btn-cta {
-            background-color: var(--color-acento);
-            color: var(--color-texto);
-            font-weight: 700;
-            padding: 15px 40px;
-            border-radius: 50px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: var(--transicion);
-            border: none;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-cta:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            color: var(--color-texto);
-        }
-        
-        .btn-cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        
-        .btn-cta:hover::before {
-            left: 100%;
-        }
-        
-        
-        
-        /* EFECTOS RESPONSIVE */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            
-            .hero h2 {
-                font-size: 1.4rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .hero {
-                padding: 100px 0;
-                background-attachment: scroll;
-            }
-            
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .section-title h2 {
-                font-size: 2.2rem;
-            }
-            
-            .cta-section h2 {
-                font-size: 2rem;
-            }
-        }
+    --color-primario: #ff6347; /* Color coral del logo */
+    --color-secundario: #ffc0cb; /* Rosa claro */
+    --color-acento: #ff6347; /* Coral para acentos */
+    --color-texto: #333;
+    --color-claro: #fff5f7; /* Rosa muy claro para fondos */
+    --sombra: 0 10px 30px rgba(255, 99, 71, 0.1);
+    --transicion: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Header actualizado */
+header {
+    background: #fff5f7;
+    box-shadow: 0 2px 8px rgba(255, 99, 71, 0.1);
+}
+
+header li a {
+    color: #ff6347;
+}
+
+header li a:hover {
+    background: #ffc0cb;
+    color: #ff6347;
+}
+
+/* Hero actualizado */
+.hero {
+    background: linear-gradient(135deg, rgba(255, 99, 71, 0.9), rgba(255, 192, 203, 0.8));
+}
+
+/* Botones actualizados */
+.btn-hero, .btn-cta {
+    background-color: #ff6347;
+    color: white;
+}
+
+.btn-hero:hover, .btn-cta:hover {
+    background-color: #ffc0cb;
+    color: #ff6347;
+}
+
+/* Cards actualizadas */
+.servicio-card {
+    border: 2px solid #fff5f7;
+}
+
+.servicio-body h3 {
+    color: #ff6347;
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, #ff6347, #ffc0cb);
+}
+
+/* Footer */
+footer {
+    background: #fff5f7;
+    color: #ff6347;
+    padding: 30px 10px 10px 10px;
+    margin-top: 40px;
+}
+
+footer a {
+    color: #ff6347;
+}
+
+footer a:hover {
+    color: #ffc0cb;
+}
+
+/* Títulos */
+.section-title h2::after {
+    background-color: #ff6347;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: #fff5f7 !important;
+}
+
+.nav-link::after {
+    background-color: #ff6347;
+}
+
+/* Ajustes adicionales */
+body {
+    background-color: #fff5f7;
+}
+
+.titulo {
+    color: #ff6347;
+}
+
+.bienvenida {
+    color: #ff6347;
+}
+
+.descripcion {
+    background: linear-gradient(135deg, #ff6347 0%, #ffc0cb 100%);
+    color: white;
+}
