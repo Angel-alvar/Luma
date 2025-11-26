@@ -17,10 +17,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Configuración de base de datos con ruta absoluta para SQLite
-basedir = os.path.abspath(os.path.dirname(__file__))
-default_db_path = 'sqlite:///' + os.path.join(basedir, 'luma.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', default_db_path)
+# Configuración de base de datos MariaDB
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'mysql+pymysql://user:password@localhost/luma')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'clave-secreta-desarrollo')
 
