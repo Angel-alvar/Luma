@@ -16,7 +16,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///luma.db')
+
+# Configuración de base de datos con ruta absoluta para SQLite
+basedir = os.path.abspath(os.path.dirname(__file__))
+default_db_path = 'sqlite:///' + os.path.join(basedir, 'luma.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', default_db_path)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'clave-secreta-desarrollo')
 
@@ -66,18 +70,23 @@ def init_database():
     db.session.commit()
     
     # Crear usuario admin por defecto si no existe
+    # La contraseña del admin se toma de variable de entorno o usa valor por defecto
     admin_tipo = TipoUsuario.query.filter_by(nombre='admin').first()
     if admin_tipo:
         admin_user = Usuario.query.filter_by(correo='admin@luma.com').first()
         if not admin_user:
+            admin_password = os.getenv('ADMIN_PASSWORD', 'admin123')
             admin_user = Usuario(
                 nombre='Administrador',
                 correo='admin@luma.com',
                 id_tipo=admin_tipo.id_tipo
             )
-            admin_user.set_password('admin123')
+            admin_user.set_password(admin_password)
             db.session.add(admin_user)
             db.session.commit()
+            if admin_password == 'admin123':
+                print("ADVERTENCIA: El usuario admin usa la contraseña por defecto. "
+                      "Establezca ADMIN_PASSWORD en producción.")
     
     print("Base de datos inicializada correctamente.")
 
@@ -447,9 +456,28 @@ def rastrear_pedido():
             pedido = Pedido.query.get(pedido_id)
             
             if pedido:
-                seguimientos = SeguimientoPedido.query.filter_by(
-                    id_pedido=pedido.id_pedido
-                ).order_by(SeguimientoPedido.fecha.desc()).all()
+                # Verificar autorización: el pedido puede ser visto por:
+                # 1. El cliente dueño del pedido
+                # 2. Un admin o empleado autenticado
+                # 3. Cualquiera puede ver información básica del estado (sin datos sensibles)
+                can_view_details = False
+                
+                if current_user.is_authenticated:
+                    if current_user.is_admin or current_user.is_empleado:
+                        can_view_details = True
+                    else:
+                        cliente = Cliente.query.filter_by(id_usuario=current_user.id_usuario).first()
+                        if cliente and pedido.id_cliente == cliente.id_cliente:
+                            can_view_details = True
+                
+                if can_view_details:
+                    seguimientos = SeguimientoPedido.query.filter_by(
+                        id_pedido=pedido.id_pedido
+                    ).order_by(SeguimientoPedido.fecha.desc()).all()
+                else:
+                    # Solo mostrar información básica del estado sin detalles sensibles
+                    seguimientos = []
+                    flash('Para ver los detalles completos del pedido, inicie sesión como el cliente propietario.', 'info')
             else:
                 flash('Pedido no encontrado.', 'warning')
     

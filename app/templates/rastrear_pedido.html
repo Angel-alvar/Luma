@@ -135,6 +135,7 @@
         </div>
     </div>
     
+    {% if seguimientos %}
     <div class="card p-4 mb-4">
         <h5><i class="fas fa-box"></i> Detalles del Pedido</h5>
         <table class="table">
@@ -158,6 +159,11 @@
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="card p-4 mb-4 text-center">
+        <p class="text-muted mb-0"><i class="fas fa-lock"></i> Inicie sesión para ver los detalles completos del pedido.</p>
+    </div>
+    {% endif %}
     
     <div class="card p-4">
         <h5><i class="fas fa-history"></i> Historial de Seguimiento</h5>

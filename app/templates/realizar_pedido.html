@@ -96,36 +96,57 @@
 <script>
 document.getElementById('addProducto').addEventListener('click', function() {
     const container = document.getElementById('productos-container');
-    const productos = `{{ productos | tojson | safe }}`;
-    const productosList = JSON.parse(productos);
+    const firstSelect = container.querySelector('select[name="productos"]');
     
-    let options = '<option value="">Seleccionar producto...</option>';
-    productosList.forEach(p => {
-        options += `<option value="${p.id_producto}">${p.nombre} - $${p.precio}</option>`;
-    });
-    
+    // Clone options from first select to avoid XSS
     const newRow = document.createElement('div');
     newRow.className = 'producto-row mb-3 row';
-    newRow.innerHTML = `
-        <div class="col-md-7">
-            <select name="productos" class="form-select" required>
-                ${options}
-            </select>
-        </div>
-        <div class="col-md-3">
-            <input type="number" name="cantidades" class="form-control" min="1" value="1" required>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-danger btn-remove-producto">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-    `;
-    container.appendChild(newRow);
     
-    newRow.querySelector('.btn-remove-producto').addEventListener('click', function() {
+    // Create the select element
+    const selectDiv = document.createElement('div');
+    selectDiv.className = 'col-md-6';
+    const select = document.createElement('select');
+    select.name = 'productos';
+    select.className = 'form-select';
+    select.required = true;
+    
+    // Clone options from the first select
+    Array.from(firstSelect.options).forEach(opt => {
+        const newOpt = document.createElement('option');
+        newOpt.value = opt.value;
+        newOpt.textContent = opt.textContent;
+        select.appendChild(newOpt);
+    });
+    selectDiv.appendChild(select);
+    
+    // Create quantity input
+    const quantityDiv = document.createElement('div');
+    quantityDiv.className = 'col-md-3';
+    const quantityInput = document.createElement('input');
+    quantityInput.type = 'number';
+    quantityInput.name = 'cantidades';
+    quantityInput.className = 'form-control';
+    quantityInput.min = '1';
+    quantityInput.value = '1';
+    quantityInput.required = true;
+    quantityDiv.appendChild(quantityInput);
+    
+    // Create remove button
+    const buttonDiv = document.createElement('div');
+    buttonDiv.className = 'col-md-3';
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn btn-danger btn-remove-producto';
+    removeBtn.innerHTML = '<i class="fas fa-trash"></i> Quitar';
+    removeBtn.addEventListener('click', function() {
         newRow.remove();
     });
+    buttonDiv.appendChild(removeBtn);
+    
+    newRow.appendChild(selectDiv);
+    newRow.appendChild(quantityDiv);
+    newRow.appendChild(buttonDiv);
+    container.appendChild(newRow);
 });
 </script>
 </body>
