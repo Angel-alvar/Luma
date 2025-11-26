@@ -1,0 +1,205 @@
+/* Estilos para páginas de autenticación */
+body {
+    background: linear-gradient(135deg, #fff5f7 0%, #ffe0e6 100%);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+}
+
+.auth-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(255, 99, 71, 0.15);
+}
+
+.auth-title {
+    font-family: 'Pacifico', cursive;
+    color: #ff6347;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.auth-title i {
+    margin-right: 10px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #ff6347;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #ffc0cb;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #ff6347;
+    box-shadow: 0 0 0 0.2rem rgba(255, 99, 71, 0.25);
+}
+
+.btn-auth {
+    background: linear-gradient(135deg, #ff6347 0%, #ff8c69 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 30px;
+    font-weight: bold;
+    color: #fff;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-auth:hover {
+    background: linear-gradient(135deg, #ff8c69 0%, #ff6347 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 99, 71, 0.4);
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ffc0cb;
+}
+
+.auth-links a {
+    color: #ff6347;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+    color: #ff8c69;
+    text-decoration: underline;
+}
+
+.alert {
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Admin panel styles */
+.admin-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.admin-header {
+    background: linear-gradient(135deg, #ff6347 0%, #ff8c69 100%);
+    color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(255, 99, 71, 0.3);
+}
+
+.admin-header h1 {
+    font-family: 'Pacifico', cursive;
+    margin: 0;
+}
+
+.admin-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.admin-card h3 {
+    color: #ff6347;
+    border-bottom: 2px solid #ffc0cb;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.table-admin {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-admin thead {
+    background: linear-gradient(135deg, #ff6347 0%, #ff8c69 100%);
+    color: #fff;
+}
+
+.table-admin th, .table-admin td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+.btn-action {
+    padding: 5px 15px;
+    border-radius: 8px;
+    margin: 2px;
+    font-size: 0.85rem;
+}
+
+.btn-edit {
+    background: #ffc107;
+    border: none;
+    color: #000;
+}
+
+.btn-delete {
+    background: #dc3545;
+    border: none;
+    color: #fff;
+}
+
+.btn-create {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.btn-create:hover {
+    background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+    color: #fff;
+}
+
+.badge-tipo {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.badge-admin {
+    background: #dc3545;
+    color: #fff;
+}
+
+.badge-empleado {
+    background: #ffc107;
+    color: #000;
+}
+
+.badge-cliente {
+    background: #17a2b8;
+    color: #fff;
+}
+
+.badge-activo {
+    background: #28a745;
+    color: #fff;
+}
+
+.badge-inactivo {
+    background: #6c757d;
+    color: #fff;
+}

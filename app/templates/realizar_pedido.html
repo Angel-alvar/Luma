@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Realizar Pedido | Luma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estiloinicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/headerfooter.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pedidostyle.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+</head>
+<body>
+{% include 'header.html' %}
+
+<main class="info-container">
+    <h1 class="titulo"><i class="fas fa-shopping-cart"></i> Realizar Pedido</h1>
+    <p class="bienvenida">Complete el formulario para realizar su pedido</p>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="card p-4">
+        <form action="{{ url_for('realizar_pedido') }}" method="post" id="pedidoForm">
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-user"></i> Cliente</label>
+                <input type="text" class="form-control" value="{{ current_user.nombre }}" disabled>
+            </div>
+            
+            <div class="mb-3">
+                <label for="telefono" class="form-label"><i class="fas fa-phone"></i> Teléfono de Contacto</label>
+                <input type="tel" id="telefono" name="telefono" class="form-control" placeholder="646-123-4567">
+            </div>
+            
+            <hr>
+            <h5 class="mb-3"><i class="fas fa-box"></i> Productos</h5>
+            
+            <div id="productos-container">
+                <div class="producto-row mb-3 row">
+                    <div class="col-md-8">
+                        <label class="form-label">Producto</label>
+                        <select name="productos" class="form-select" required>
+                            <option value="">Seleccionar producto...</option>
+                            {% for producto in productos %}
+                            <option value="{{ producto.id_producto }}">
+                                {{ producto.nombre }} - ${{ producto.precio }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" name="cantidades" class="form-control" min="1" value="1" required>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" class="btn btn-outline-secondary mb-3" id="addProducto">
+                <i class="fas fa-plus"></i> Agregar otro producto
+            </button>
+            
+            <div class="mb-3">
+                <label for="notas" class="form-label"><i class="fas fa-sticky-note"></i> Notas adicionales</label>
+                <textarea id="notas" name="notas" class="form-control" rows="3" placeholder="Especificaciones adicionales para su pedido..."></textarea>
+            </div>
+            
+            <div class="text-center">
+                <button type="submit" class="btn-enviar">
+                    <i class="fas fa-paper-plane"></i> Enviar Pedido
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="{{ url_for('mis_pedidos') }}" class="btn btn-outline-primary">
+            <i class="fas fa-list"></i> Ver Mis Pedidos
+        </a>
+    </div>
+</main>
+
+{% include 'footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script>
+document.getElementById('addProducto').addEventListener('click', function() {
+    const container = document.getElementById('productos-container');
+    const productos = `{{ productos | tojson | safe }}`;
+    const productosList = JSON.parse(productos);
+    
+    let options = '<option value="">Seleccionar producto...</option>';
+    productosList.forEach(p => {
+        options += `<option value="${p.id_producto}">${p.nombre} - $${p.precio}</option>`;
+    });
+    
+    const newRow = document.createElement('div');
+    newRow.className = 'producto-row mb-3 row';
+    newRow.innerHTML = `
+        <div class="col-md-7">
+            <select name="productos" class="form-select" required>
+                ${options}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="number" name="cantidades" class="form-control" min="1" value="1" required>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-danger btn-remove-producto">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(newRow);
+    
+    newRow.querySelector('.btn-remove-producto').addEventListener('click', function() {
+        newRow.remove();
+    });
+});
+</script>
+</body>
+</html>

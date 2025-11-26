@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar Pedido | Luma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estiloinicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/headerfooter.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+    <style>
+        .estado-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .estado-pendiente { background: #ffc107; color: #000; }
+        .estado-en_proceso { background: #17a2b8; color: #fff; }
+        .estado-en_produccion { background: #6f42c1; color: #fff; }
+        .estado-listo { background: #28a745; color: #fff; }
+        .estado-enviado { background: #007bff; color: #fff; }
+        .estado-entregado { background: #20c997; color: #fff; }
+        .estado-cancelado { background: #dc3545; color: #fff; }
+    </style>
+</head>
+<body>
+{% include 'header.html' %}
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1><i class="fas fa-edit"></i> Actualizar Pedido #{{ pedido.id_pedido }}</h1>
+        <a href="{{ url_for('admin_pedidos') }}" class="btn btn-light btn-sm mt-2">
+            <i class="fas fa-arrow-left"></i> Volver a Pedidos
+        </a>
+    </div>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h3><i class="fas fa-info-circle"></i> Información del Pedido</h3>
+                <table class="table">
+                    <tr>
+                        <th>Cliente:</th>
+                        <td>{{ pedido.cliente.usuario.nombre if pedido.cliente and pedido.cliente.usuario else 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo:</th>
+                        <td>{{ pedido.cliente.usuario.correo if pedido.cliente and pedido.cliente.usuario else 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Teléfono:</th>
+                        <td>{{ pedido.cliente.telefono if pedido.cliente else 'N/A' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha:</th>
+                        <td>{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Estado Actual:</th>
+                        <td>
+                            <span class="estado-badge estado-{{ pedido.estado }}">
+                                {{ pedido.estado.replace('_', ' ').title() }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+                
+                <h5><i class="fas fa-box"></i> Productos</h5>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detalle in pedido.detalles %}
+                        <tr>
+                            <td>{{ detalle.producto.nombre }}</td>
+                            <td>{{ detalle.cantidad }}</td>
+                            <td>${{ detalle.producto.precio }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="admin-card">
+                <h3><i class="fas fa-sync-alt"></i> Actualizar Estado</h3>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Nuevo Estado</label>
+                        <select class="form-select" id="estado" name="estado" required>
+                            {% for estado in estados %}
+                            <option value="{{ estado }}" {% if pedido.estado == estado %}selected{% endif %}>
+                                {{ estado.replace('_', ' ').title() }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comentario" class="form-label">Comentario</label>
+                        <textarea class="form-control" id="comentario" name="comentario" rows="3" 
+                                  placeholder="Comentario sobre la actualización..."></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-auth">
+                            <i class="fas fa-save"></i> Actualizar Estado
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="admin-card mt-4">
+                <h3><i class="fas fa-history"></i> Historial</h3>
+                {% for seg in pedido.seguimientos|sort(attribute='fecha', reverse=True) %}
+                <div class="mb-3 p-3 border rounded">
+                    <div class="d-flex justify-content-between">
+                        <span class="estado-badge estado-{{ seg.estado }}">
+                            {{ seg.estado.replace('_', ' ').title() }}
+                        </span>
+                        <small class="text-muted">{{ seg.fecha.strftime('%d/%m/%Y %H:%M') }}</small>
+                    </div>
+                    {% if seg.comentario %}
+                    <p class="mb-0 mt-2 small">{{ seg.comentario }}</p>
+                    {% endif %}
+                </div>
+                {% else %}
+                <p class="text-muted">Sin historial</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include 'footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>
