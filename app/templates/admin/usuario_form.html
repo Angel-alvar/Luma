@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Editar' if usuario else 'Crear' }} Usuario | Luma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estiloinicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/headerfooter.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+</head>
+<body>
+{% include 'header.html' %}
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1><i class="fas fa-user"></i> {{ 'Editar' if usuario else 'Crear' }} Usuario</h1>
+        <a href="{{ url_for('lista_usuarios') }}" class="btn btn-light btn-sm mt-2">
+            <i class="fas fa-arrow-left"></i> Volver a la Lista
+        </a>
+    </div>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="admin-card">
+        <form method="post">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre Completo</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" 
+                       value="{{ usuario.nombre if usuario else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="correo" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="correo" name="correo" 
+                       value="{{ usuario.correo if usuario else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">
+                    {% if usuario %}Nueva Contraseña (dejar vacío para mantener){% else %}Contraseña{% endif %}
+                </label>
+                <input type="password" class="form-control" id="password" name="password" 
+                       {% if not usuario %}required{% endif %}>
+            </div>
+            <div class="mb-3">
+                <label for="id_tipo" class="form-label">Tipo de Usuario</label>
+                <select class="form-select" id="id_tipo" name="id_tipo" required>
+                    <option value="">Seleccionar tipo...</option>
+                    {% for tipo in tipos %}
+                    <option value="{{ tipo.id_tipo }}" 
+                            {% if usuario and usuario.id_tipo == tipo.id_tipo %}selected{% endif %}>
+                        {{ tipo.nombre }} - {{ tipo.descripcion or '' }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if usuario %}
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="activo" name="activo" 
+                           {% if usuario.activo %}checked{% endif %}>
+                    <label class="form-check-label" for="activo">Usuario Activo</label>
+                </div>
+            </div>
+            {% endif %}
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-auth">
+                    <i class="fas fa-save"></i> {{ 'Actualizar' if usuario else 'Crear' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+{% include 'footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>

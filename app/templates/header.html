@@ -7,6 +7,16 @@
             <li><a href="{{ url_for('pedidos') }}">Pedidos</a></li>
             <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
             <li><a href="{{ url_for('acerca') }}">Nosotros</a></li>
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_admin or current_user.is_empleado %}
+                <li><a href="{{ url_for('admin_panel') }}"><i class="fas fa-cog"></i> Admin</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('mis_pedidos') }}"><i class="fas fa-clipboard-list"></i> Mis Pedidos</a></li>
+                <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Salir ({{ current_user.nombre }})</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                <li><a href="{{ url_for('registro') }}"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+            {% endif %}
         </ul>
     </nav>
 </header>
