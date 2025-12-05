@@ -218,6 +218,8 @@ def registro():
     return render_template('registro.html')
 
 
+
+
 # ==================== PANEL DE ADMINISTRACIÓN ====================
 
 @app.route('/admin_panel')
@@ -226,7 +228,71 @@ def registro():
 def admin_panel():
     usuarios = Usuario.query.all()
     tipos = TipoUsuario.query.all()
-    return render_template('admin/panel.html', usuarios=usuarios, tipos=tipos)
+    productos =Producto.query.all()
+    return render_template('admin/panel.html', usuarios=usuarios, tipos=tipos, productos=productos)
+
+
+#CRUD PRODUCTOS
+@app.route('/admin/productos')
+@login_required
+@admin_required
+def lista_productos():
+    productos = Producto.query.all()
+    return render_template('admin/productos_lista.html', productos=productos)
+
+@app.route('/admin/productos/crear', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def crear_producto():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        descripcion = request.form.get('descripcion', '')
+        precio = float(request.form.get('precio', 0))
+        stock = int(request.form.get('stock', 0))
+        
+        nuevo_producto = Producto(
+            nombre=nombre,
+            descripcion=descripcion,
+            precio=precio,
+            stock=stock
+        )
+        db.session.add(nuevo_producto)
+        db.session.commit()
+        
+        flash('Producto creado exitosamente.', 'success')
+        return redirect(url_for('lista_productos'))
+    
+    return render_template('admin/productos_form.html', producto=None)
+
+@app.route('/admin/productos/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def editar_producto(id):
+    producto = Producto.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        producto.nombre = request.form.get('nombre')
+        producto.descripcion = request.form.get('descripcion', '')
+        producto.precio = float(request.form.get('precio', 0))
+        producto.stock = int(request.form.get('stock', 0))
+        db.session.commit()
+        
+        flash('Producto actualizado.', 'success')
+        return redirect(url_for('lista_productos'))
+    
+    return render_template('admin/productos_form.html', producto=producto)
+
+@app.route('/admin/productos/eliminar/<int:id>')
+@login_required
+@admin_required
+def eliminar_producto(id):
+    producto = Producto.query.get_or_404(id)
+    db.session.delete(producto)
+    db.session.commit()
+    
+    flash('Producto eliminado.', 'success')
+    return redirect(url_for('lista_productos'))
+
 
 
 # CRUD TIPOS DE USUARIO

@@ -21,7 +21,7 @@ class Usuario(UserMixin, db.Model):
     nombre = db.Column(db.String(50), nullable=False)
     correo = db.Column(db.String(100), unique=True, nullable=False)
     contrasena_hash = db.Column(db.String(256), nullable=False)
-    id_tipo = db.Column(db.Integer, db.ForeignKey('tipos_usuario.id_tipo'), nullable=False)
+    id_tipo = db.Column(db.Integer, db.ForeignKey('tipos_usuario.id_tipo'), nullable=True)
     activo = db.Column(db.Boolean, default=True)
     fecha_registro = db.Column(db.DateTime, default=datetime.utcnow)
 
