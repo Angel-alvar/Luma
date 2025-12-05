@@ -1014,8 +1014,19 @@ def empleado_crear_pedido():
         fecha = datetime.utcnow()
         estado = request.form.get('estado', 'pendiente')
         
+        # Validar id_cliente
+        if not id_cliente:
+            flash('Debe seleccionar un cliente.', 'danger')
+            return redirect(url_for('empleado_crear_pedido'))
+        
+        try:
+            id_cliente_int = int(id_cliente)
+        except (ValueError, TypeError):
+            flash('Cliente inválido.', 'danger')
+            return redirect(url_for('empleado_crear_pedido'))
+        
         nuevo_pedido = Pedido(
-            id_cliente=int(id_cliente),
+            id_cliente=id_cliente_int,
             fecha=fecha,
             estado=estado
         )
@@ -1028,12 +1039,16 @@ def empleado_crear_pedido():
         
         for i, prod_id in enumerate(productos_seleccionados):
             if prod_id and i < len(cantidades) and cantidades[i]:
-                detalle = DetallePedido(
-                    id_pedido=nuevo_pedido.id_pedido,
-                    id_producto=int(prod_id),
-                    cantidad=int(cantidades[i])
-                )
-                db.session.add(detalle)
+                try:
+                    detalle = DetallePedido(
+                        id_pedido=nuevo_pedido.id_pedido,
+                        id_producto=int(prod_id),
+                        cantidad=int(cantidades[i])
+                    )
+                    db.session.add(detalle)
+                except (ValueError, TypeError):
+                    # Skip invalid entries
+                    continue
         
         # Crear seguimiento inicial
         empleado = Empleado.query.filter_by(id_usuario=current_user.id_usuario).first()
@@ -1062,7 +1077,19 @@ def empleado_editar_pedido(id):
     productos = Producto.query.all()
     
     if request.method == 'POST':
-        pedido.id_cliente = int(request.form.get('id_cliente'))
+        id_cliente = request.form.get('id_cliente')
+        
+        # Validar id_cliente
+        if not id_cliente:
+            flash('Debe seleccionar un cliente.', 'danger')
+            return redirect(url_for('empleado_editar_pedido', id=id))
+        
+        try:
+            pedido.id_cliente = int(id_cliente)
+        except (ValueError, TypeError):
+            flash('Cliente inválido.', 'danger')
+            return redirect(url_for('empleado_editar_pedido', id=id))
+        
         pedido.estado = request.form.get('estado')
         
         # Actualizar detalles si se proporcionaron
@@ -1075,12 +1102,16 @@ def empleado_editar_pedido(id):
         
         for i, prod_id in enumerate(productos_seleccionados):
             if prod_id and i < len(cantidades) and cantidades[i]:
-                detalle = DetallePedido(
-                    id_pedido=pedido.id_pedido,
-                    id_producto=int(prod_id),
-                    cantidad=int(cantidades[i])
-                )
-                db.session.add(detalle)
+                try:
+                    detalle = DetallePedido(
+                        id_pedido=pedido.id_pedido,
+                        id_producto=int(prod_id),
+                        cantidad=int(cantidades[i])
+                    )
+                    db.session.add(detalle)
+                except (ValueError, TypeError):
+                    # Skip invalid entries
+                    continue
         
         # Crear seguimiento de la actualización
         empleado = Empleado.query.filter_by(id_usuario=current_user.id_usuario).first()
