@@ -562,9 +562,9 @@ def empleado_dashboard():
     pedidos_pendientes = Pedido.query.filter_by(estado='pendiente').order_by(Pedido.fecha.asc()).all()
     pedidos_en_proceso = Pedido.query.filter_by(estado='en_proceso').order_by(Pedido.fecha.asc()).all()
     
-    # Estadísticas
-    total_pendientes = len(pedidos_pendientes)
-    total_en_proceso = len(pedidos_en_proceso)
+    # Estadísticas - usando count() para mejor rendimiento
+    total_pendientes = Pedido.query.filter_by(estado='pendiente').count()
+    total_en_proceso = Pedido.query.filter_by(estado='en_proceso').count()
     
     return render_template('empleado/dashboard.html', 
                            pedidos_pendientes=pedidos_pendientes,
