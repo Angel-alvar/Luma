@@ -1037,6 +1037,7 @@ def empleado_crear_pedido():
         productos_seleccionados = request.form.getlist('productos[]')
         cantidades = request.form.getlist('cantidades[]')
         
+        skipped_entries = 0
         for i, prod_id in enumerate(productos_seleccionados):
             if prod_id and i < len(cantidades) and cantidades[i]:
                 try:
@@ -1047,7 +1048,7 @@ def empleado_crear_pedido():
                     )
                     db.session.add(detalle)
                 except (ValueError, TypeError):
-                    # Skip invalid entries
+                    skipped_entries += 1
                     continue
         
         # Crear seguimiento inicial
@@ -1063,6 +1064,8 @@ def empleado_crear_pedido():
         db.session.commit()
         
         flash('Pedido creado exitosamente.', 'success')
+        if skipped_entries > 0:
+            flash(f'Se omitieron {skipped_entries} producto(s) con datos inválidos.', 'warning')
         return redirect(url_for('empleado_lista_pedidos'))
     
     return render_template('empleado/pedido_form.html', pedido=None, clientes=clientes, productos=productos)
@@ -1100,6 +1103,7 @@ def empleado_editar_pedido(id):
         productos_seleccionados = request.form.getlist('productos[]')
         cantidades = request.form.getlist('cantidades[]')
         
+        skipped_entries = 0
         for i, prod_id in enumerate(productos_seleccionados):
             if prod_id and i < len(cantidades) and cantidades[i]:
                 try:
@@ -1110,7 +1114,7 @@ def empleado_editar_pedido(id):
                     )
                     db.session.add(detalle)
                 except (ValueError, TypeError):
-                    # Skip invalid entries
+                    skipped_entries += 1
                     continue
         
         # Crear seguimiento de la actualización
@@ -1126,6 +1130,8 @@ def empleado_editar_pedido(id):
         db.session.commit()
         
         flash('Pedido actualizado.', 'success')
+        if skipped_entries > 0:
+            flash(f'Se omitieron {skipped_entries} producto(s) con datos inválidos.', 'warning')
         return redirect(url_for('empleado_lista_pedidos'))
     
     return render_template('empleado/pedido_form.html', pedido=pedido, clientes=clientes, productos=productos)
