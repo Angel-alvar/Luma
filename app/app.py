@@ -538,10 +538,39 @@ def actualizar_pedido(id):
         db.session.commit()
         
         flash('Estado del pedido actualizado.', 'success')
+        
+        # Redirigir al dashboard de empleado si es empleado, sino a admin
+        if current_user.is_empleado and not current_user.is_admin:
+            return redirect(url_for('empleado_dashboard'))
         return redirect(url_for('admin_pedidos'))
     
     estados = ['pendiente', 'en_proceso', 'en_produccion', 'listo', 'enviado', 'entregado', 'cancelado']
     return render_template('admin/pedido_actualizar.html', pedido=pedido, estados=estados)
+
+
+# ==================== PANEL DE EMPLEADO ====================
+
+@app.route('/empleado/dashboard')
+@login_required
+def empleado_dashboard():
+    """Dashboard para empleados: muestra pedidos pendientes y en proceso"""
+    if not current_user.is_empleado:
+        flash('Acceso denegado. Esta página es solo para empleados.', 'danger')
+        return redirect(url_for('inicio'))
+    
+    # Obtener pedidos pendientes y en proceso
+    pedidos_pendientes = Pedido.query.filter_by(estado='pendiente').order_by(Pedido.fecha.asc()).all()
+    pedidos_en_proceso = Pedido.query.filter_by(estado='en_proceso').order_by(Pedido.fecha.asc()).all()
+    
+    # Estadísticas
+    total_pendientes = len(pedidos_pendientes)
+    total_en_proceso = len(pedidos_en_proceso)
+    
+    return render_template('empleado/dashboard.html', 
+                           pedidos_pendientes=pedidos_pendientes,
+                           pedidos_en_proceso=pedidos_en_proceso,
+                           total_pendientes=total_pendientes,
+                           total_en_proceso=total_en_proceso)
 
 
 if __name__ == '__main__':

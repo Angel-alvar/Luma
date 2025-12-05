@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Empleado | Luma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estiloinicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/headerfooter.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+    <style>
+        .estado-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .estado-pendiente { background: #ffc107; color: #000; }
+        .estado-en_proceso { background: #17a2b8; color: #fff; }
+        .estado-en_produccion { background: #6f42c1; color: #fff; }
+        .estado-listo { background: #28a745; color: #fff; }
+        .estado-enviado { background: #007bff; color: #fff; }
+        .estado-entregado { background: #20c997; color: #fff; }
+        .estado-cancelado { background: #dc3545; color: #fff; }
+        
+        .stats-card {
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-card-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .stats-card h3 {
+            font-size: 3rem;
+            margin: 0;
+            font-weight: bold;
+        }
+        
+        .stats-card p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .pedido-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .pedido-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .pedido-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .section-title {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+{% include 'header.html' %}
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1><i class="fas fa-user-tie"></i> Panel de Empleado</h1>
+        <p class="text-muted">Bienvenido, {{ current_user.nombre }}</p>
+    </div>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <!-- Estadísticas -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="stats-card stats-card-warning">
+                <i class="fas fa-clock fa-2x mb-2"></i>
+                <h3>{{ total_pendientes }}</h3>
+                <p>Pedidos Pendientes</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stats-card">
+                <i class="fas fa-tasks fa-2x mb-2"></i>
+                <h3>{{ total_en_proceso }}</h3>
+                <p>Pedidos En Proceso</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pedidos Pendientes -->
+    <div class="admin-card mb-4">
+        <h3 class="section-title"><i class="fas fa-hourglass-start"></i> Pedidos Pendientes</h3>
+        
+        {% if pedidos_pendientes %}
+            {% for pedido in pedidos_pendientes %}
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <strong style="font-size: 1.2rem; color: #667eea;">
+                            <i class="fas fa-hashtag"></i>{{ pedido.id_pedido }}
+                        </strong>
+                        <span class="estado-badge estado-{{ pedido.estado }}">
+                            {{ pedido.estado.replace('_', ' ').title() }}
+                        </span>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('actualizar_pedido', id=pedido.id_pedido) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Gestionar
+                        </a>
+                        <a href="{{ url_for('rastrear_pedido', id=pedido.id_pedido) }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> Ver
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="row pedido-info">
+                    <div class="col-md-3">
+                        <i class="fas fa-user"></i> 
+                        <strong>Cliente:</strong> {{ pedido.cliente.usuario.nombre if pedido.cliente and pedido.cliente.usuario else 'N/A' }}
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-calendar"></i> 
+                        <strong>Fecha:</strong> {{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-phone"></i> 
+                        <strong>Teléfono:</strong> {{ pedido.cliente.telefono if pedido.cliente else 'N/A' }}
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-envelope"></i> 
+                        <strong>Correo:</strong> {{ pedido.cliente.usuario.correo if pedido.cliente and pedido.cliente.usuario else 'N/A' }}
+                    </div>
+                </div>
+                
+                <div class="mt-2">
+                    <i class="fas fa-box"></i> <strong>Productos:</strong>
+                    {% for detalle in pedido.detalles %}
+                        <span class="badge bg-secondary">{{ detalle.producto.nombre }} (x{{ detalle.cantidad }})</span>
+                    {% else %}
+                        <span class="text-muted">Sin productos</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No hay pedidos pendientes en este momento.
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Pedidos En Proceso -->
+    <div class="admin-card">
+        <h3 class="section-title"><i class="fas fa-spinner"></i> Pedidos En Proceso</h3>
+        
+        {% if pedidos_en_proceso %}
+            {% for pedido in pedidos_en_proceso %}
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <strong style="font-size: 1.2rem; color: #667eea;">
+                            <i class="fas fa-hashtag"></i>{{ pedido.id_pedido }}
+                        </strong>
+                        <span class="estado-badge estado-{{ pedido.estado }}">
+                            {{ pedido.estado.replace('_', ' ').title() }}
+                        </span>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('actualizar_pedido', id=pedido.id_pedido) }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Gestionar
+                        </a>
+                        <a href="{{ url_for('rastrear_pedido', id=pedido.id_pedido) }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> Ver
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="row pedido-info">
+                    <div class="col-md-3">
+                        <i class="fas fa-user"></i> 
+                        <strong>Cliente:</strong> {{ pedido.cliente.usuario.nombre if pedido.cliente and pedido.cliente.usuario else 'N/A' }}
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-calendar"></i> 
+                        <strong>Fecha:</strong> {{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-phone"></i> 
+                        <strong>Teléfono:</strong> {{ pedido.cliente.telefono if pedido.cliente else 'N/A' }}
+                    </div>
+                    <div class="col-md-3">
+                        <i class="fas fa-envelope"></i> 
+                        <strong>Correo:</strong> {{ pedido.cliente.usuario.correo if pedido.cliente and pedido.cliente.usuario else 'N/A' }}
+                    </div>
+                </div>
+                
+                <div class="mt-2">
+                    <i class="fas fa-box"></i> <strong>Productos:</strong>
+                    {% for detalle in pedido.detalles %}
+                        <span class="badge bg-secondary">{{ detalle.producto.nombre }} (x{{ detalle.cantidad }})</span>
+                    {% else %}
+                        <span class="text-muted">Sin productos</span>
+                    {% endfor %}
+                </div>
+                
+                {% if pedido.seguimientos %}
+                    {% set ultimo_seguimiento = pedido.seguimientos|sort(attribute='fecha', reverse=True)|first %}
+                    {% if ultimo_seguimiento and ultimo_seguimiento.comentario %}
+                    <div class="mt-2 p-2 bg-light rounded">
+                        <small class="text-muted">
+                            <i class="fas fa-comment"></i> <strong>Último comentario:</strong> {{ ultimo_seguimiento.comentario }}
+                        </small>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No hay pedidos en proceso en este momento.
+            </div>
+        {% endif %}
+    </div>
+</main>
+
+{% include 'footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+</body>
+</html>
