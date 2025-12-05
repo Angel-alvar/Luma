@@ -485,13 +485,24 @@ def crear_cliente():
         id_usuario = request.form.get('id_usuario')
         telefono = request.form.get('telefono', '')
         
+        # Validar que id_usuario no esté vacío
+        if not id_usuario:
+            flash('Debe seleccionar un usuario.', 'danger')
+            return redirect(url_for('crear_cliente'))
+        
+        try:
+            id_usuario_int = int(id_usuario)
+        except (ValueError, TypeError):
+            flash('Usuario inválido.', 'danger')
+            return redirect(url_for('crear_cliente'))
+        
         # Verificar que el usuario no tenga ya un registro de cliente
-        if Cliente.query.filter_by(id_usuario=id_usuario).first():
+        if Cliente.query.filter_by(id_usuario=id_usuario_int).first():
             flash('Este usuario ya tiene un registro de cliente.', 'danger')
             return redirect(url_for('crear_cliente'))
         
         nuevo_cliente = Cliente(
-            id_usuario=int(id_usuario),
+            id_usuario=id_usuario_int,
             telefono=telefono
         )
         db.session.add(nuevo_cliente)
@@ -511,7 +522,18 @@ def editar_cliente(id):
     usuarios = Usuario.query.all()
     
     if request.method == 'POST':
-        cliente.id_usuario = int(request.form.get('id_usuario'))
+        id_usuario = request.form.get('id_usuario')
+        
+        if not id_usuario:
+            flash('Debe seleccionar un usuario.', 'danger')
+            return redirect(url_for('editar_cliente', id=id))
+        
+        try:
+            cliente.id_usuario = int(id_usuario)
+        except (ValueError, TypeError):
+            flash('Usuario inválido.', 'danger')
+            return redirect(url_for('editar_cliente', id=id))
+        
         cliente.telefono = request.form.get('telefono', '')
         db.session.commit()
         
@@ -558,13 +580,24 @@ def crear_empleado():
         id_usuario = request.form.get('id_usuario')
         puesto = request.form.get('puesto', '')
         
+        # Validar que id_usuario no esté vacío
+        if not id_usuario:
+            flash('Debe seleccionar un usuario.', 'danger')
+            return redirect(url_for('crear_empleado'))
+        
+        try:
+            id_usuario_int = int(id_usuario)
+        except (ValueError, TypeError):
+            flash('Usuario inválido.', 'danger')
+            return redirect(url_for('crear_empleado'))
+        
         # Verificar que el usuario no tenga ya un registro de empleado
-        if Empleado.query.filter_by(id_usuario=id_usuario).first():
+        if Empleado.query.filter_by(id_usuario=id_usuario_int).first():
             flash('Este usuario ya tiene un registro de empleado.', 'danger')
             return redirect(url_for('crear_empleado'))
         
         nuevo_empleado = Empleado(
-            id_usuario=int(id_usuario),
+            id_usuario=id_usuario_int,
             puesto=puesto
         )
         db.session.add(nuevo_empleado)
@@ -584,7 +617,18 @@ def editar_empleado(id):
     usuarios = Usuario.query.all()
     
     if request.method == 'POST':
-        empleado.id_usuario = int(request.form.get('id_usuario'))
+        id_usuario = request.form.get('id_usuario')
+        
+        if not id_usuario:
+            flash('Debe seleccionar un usuario.', 'danger')
+            return redirect(url_for('editar_empleado', id=id))
+        
+        try:
+            empleado.id_usuario = int(id_usuario)
+        except (ValueError, TypeError):
+            flash('Usuario inválido.', 'danger')
+            return redirect(url_for('editar_empleado', id=id))
+        
         empleado.puesto = request.form.get('puesto', '')
         db.session.commit()
         
@@ -628,8 +672,14 @@ def crear_insumo():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         descripcion = request.form.get('descripcion', '')
-        cantidad = int(request.form.get('cantidad', 0))
+        cantidad_str = request.form.get('cantidad', '0')
         unidad = request.form.get('unidad', '')
+        
+        try:
+            cantidad = int(cantidad_str)
+        except (ValueError, TypeError):
+            flash('Cantidad inválida. Debe ser un número entero.', 'danger')
+            return redirect(url_for('crear_insumo'))
         
         nuevo_insumo = Insumo(
             nombre=nombre,
@@ -653,9 +703,17 @@ def editar_insumo(id):
     insumo = Insumo.query.get_or_404(id)
     
     if request.method == 'POST':
+        cantidad_str = request.form.get('cantidad', '0')
+        
+        try:
+            cantidad = int(cantidad_str)
+        except (ValueError, TypeError):
+            flash('Cantidad inválida. Debe ser un número entero.', 'danger')
+            return redirect(url_for('editar_insumo', id=id))
+        
         insumo.nombre = request.form.get('nombre')
         insumo.descripcion = request.form.get('descripcion', '')
-        insumo.cantidad = int(request.form.get('cantidad', 0))
+        insumo.cantidad = cantidad
         insumo.unidad = request.form.get('unidad', '')
         db.session.commit()
         
@@ -869,8 +927,15 @@ def empleado_crear_producto():
     if request.method == 'POST':
         nombre = request.form.get('nombre')
         descripcion = request.form.get('descripcion', '')
-        precio = float(request.form.get('precio', 0))
-        stock = int(request.form.get('stock', 0))
+        precio_str = request.form.get('precio', '0')
+        stock_str = request.form.get('stock', '0')
+        
+        try:
+            precio = float(precio_str)
+            stock = int(stock_str)
+        except (ValueError, TypeError):
+            flash('Precio o stock inválido. Verifique los valores ingresados.', 'danger')
+            return redirect(url_for('empleado_crear_producto'))
         
         nuevo_producto = Producto(
             nombre=nombre,
@@ -894,10 +959,20 @@ def empleado_editar_producto(id):
     producto = Producto.query.get_or_404(id)
     
     if request.method == 'POST':
+        precio_str = request.form.get('precio', '0')
+        stock_str = request.form.get('stock', '0')
+        
+        try:
+            precio = float(precio_str)
+            stock = int(stock_str)
+        except (ValueError, TypeError):
+            flash('Precio o stock inválido. Verifique los valores ingresados.', 'danger')
+            return redirect(url_for('empleado_editar_producto', id=id))
+        
         producto.nombre = request.form.get('nombre')
         producto.descripcion = request.form.get('descripcion', '')
-        producto.precio = float(request.form.get('precio', 0))
-        producto.stock = int(request.form.get('stock', 0))
+        producto.precio = precio
+        producto.stock = stock
         db.session.commit()
         
         flash('Producto actualizado.', 'success')
