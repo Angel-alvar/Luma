@@ -14,24 +14,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/headerfooter.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
 </head>
-{% include 'header.html' %}
+{% include 'header.html' %} 
 <body>
       <!-- Slideshow mejorado -->
     <div class="hero-slideshow" data-aos="fade-right">
         <!-- Slide 1 -->
         <div class="slide active" style="background-image: url('{{ url_for('static', filename='images/slide1.jpg') }}')">
             <div class="slide-content">
-                <h2 class="animate__animated animate__fadeInDown">Diseño e Impresión Profesional</h2>
-                <p class="animate__animated animate__fadeInUp animate__delay-1s">Tu visión, nuestra impresión</p>
-                <a href="{{ url_for('servicios') }}" class="slide-btn animate__animated animate__fadeInUp animate__delay-2s">Servicios de Impresión</a>
+                <h2 class="animate__animated animate__fadeInDown">Regalos Personalizados</h2>
+                <p class="animate__animated animate__fadeInUp animate__delay-1s">Tu lugar favorito para personalizar TODO está aquí</p>
+                <a href="{{ url_for('servicios') }}" class="slide-btn animate__animated animate__fadeInUp animate__delay-2s">Mira algunos de nuestros diseños</a>
             </div>
         </div>
 
         <!-- Slide 2 -->
         <div class="slide" style="background-image: url('{{ url_for('static', filename='images/slide2.jpg') }}')">
             <div class="slide-content">
-                <h2 class="animate__animated animate__fadeInDown">Calidad en Cada Impresión</h2>
-                <p class="animate__animated animate__fadeInUp animate__delay-1s">Equipos de última generación para resultados perfectos</p>
+                <h2 class="animate__animated animate__fadeInDown">Sigue tu pedido</h2>
+                <p class="animate__animated animate__fadeInUp animate__delay-1s"> de última generación para resultados perfectos</p>
                 <a href="{{ url_for('pedidos') }}" class="slide-btn animate__animated animate__fadeInUp animate__delay-2s">Ver pedidos</a>
             </div>
         </div>
@@ -151,9 +151,9 @@
    <!-- CTA QUE TE DAN GANAS DE COMPRAR -->
     <section class="cta-section">
         <div class="container cta-content" data-aos="fade-up">
-            <h2>¿Necesitas imprimir algo especial?</h2>
+            <h2>¿Necesitas regalar algo especial?</h2>
             <p class="mb-4">Cotiza tu proyecto con nosotros y obtén el mejor precio</p>
-            <a href="{{ url_for('contacto') }}" class="btn btn-cta">¡Cotizar ahora!</a>
+            <a href="{{ url_for('contacto') }}" class="btn btn-cta">¡Realitza tu pedido ahora!</a>
         </div>
     </section>
     {% include 'footer.html' %}

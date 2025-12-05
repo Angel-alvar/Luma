@@ -17,15 +17,21 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Configuración de base de datos con ruta absoluta para SQLite
-basedir = os.path.abspath(os.path.dirname(__file__))
-default_db_path = 'sqlite:///' + os.path.join(basedir, 'luma.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', default_db_path)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'clave-secreta-desarrollo')
+# Configuración de base de datos con ruta absoluta para mariadb
 
-# Inicializar la base de datos
+app.config ['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:muffin@localhost/luma'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'clave-secreta-desarrollo')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
+
+
+
+
 
 # Configurar Flask-Login
 login_manager = LoginManager()
@@ -93,6 +99,11 @@ def init_database():
 
 with app.app_context():
     init_database()
+
+
+
+
+
 
 
 # Rutas principales

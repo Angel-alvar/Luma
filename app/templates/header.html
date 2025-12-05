@@ -5,8 +5,6 @@
             <li><a href="{{ url_for('inicio') }}">Inicio</a></li>
             <li><a href="{{ url_for('servicios') }}">Servicios</a></li>
             <li><a href="{{ url_for('pedidos') }}">Pedidos</a></li>
-            <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
-            <li><a href="{{ url_for('acerca') }}">Nosotros</a></li>
             {% if current_user.is_authenticated %}
                 {% if current_user.is_admin or current_user.is_empleado %}
                 <li><a href="{{ url_for('admin_panel') }}"><i class="fas fa-cog"></i> Admin</a></li>
