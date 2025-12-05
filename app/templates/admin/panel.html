@@ -55,8 +55,26 @@
         
         <div class="col-md-6 col-lg-3 mb-4">
             <div class="admin-card text-center">
+                <i class="fas fa-user-friends fa-3x text-info mb-3"></i>
+                <h4>{{ clientes|length }}</h4>
+                <p class="text-muted">Clientes</p>
+                <a href="{{ url_for('lista_clientes') }}" class="btn btn-outline-info btn-sm">Gestionar</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="admin-card text-center">
+                <i class="fas fa-user-tie fa-3x text-secondary mb-3"></i>
+                <h4>{{ empleados|length }}</h4>
+                <p class="text-muted">Empleados</p>
+                <a href="{{ url_for('lista_empleados') }}" class="btn btn-outline-secondary btn-sm">Gestionar</a>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="admin-card text-center">
                 <i class="fas fa-shopping-cart fa-3x text-warning mb-3"></i>
-                <h4><i class="fas fa-box"></i></h4>
+                <h4>{{ pedidos|length }}</h4>
                 <p class="text-muted">Pedidos</p>
                 <a href="{{ url_for('admin_pedidos') }}" class="btn btn-outline-warning btn-sm">Gestionar</a>
             </div>
@@ -64,19 +82,28 @@
 
         <div class="col-md-6 col-lg-3 mb-4">
             <div class="admin-card text-center">
-                <i class="fas fa-box fa-3x text-warning mb-3"></i>
-                <h4><i class="fas fa-box"></i></h4>
+                <i class="fas fa-box fa-3x text-danger mb-3"></i>
+                <h4>{{ productos|length }}</h4>
                 <p class="text-muted">Productos</p>
-                <a href="{{ url_for('lista_productos') }}" class="btn btn-outline-warning btn-sm">Gestionar</a>
+                <a href="{{ url_for('lista_productos') }}" class="btn btn-outline-danger btn-sm">Gestionar</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="admin-card text-center">
+                <i class="fas fa-cubes fa-3x text-dark mb-3"></i>
+                <h4>{{ insumos|length }}</h4>
+                <p class="text-muted">Insumos</p>
+                <a href="{{ url_for('lista_insumos') }}" class="btn btn-outline-dark btn-sm">Gestionar</a>
             </div>
         </div>
         
         <div class="col-md-6 col-lg-3 mb-4">
             <div class="admin-card text-center">
-                <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
+                <i class="fas fa-chart-bar fa-3x text-primary mb-3"></i>
                 <h4><i class="fas fa-tachometer-alt"></i></h4>
                 <p class="text-muted">Dashboard</p>
-                <a href="{{ url_for('inicio') }}" class="btn btn-outline-info btn-sm">Ir al Inicio</a>
+                <a href="{{ url_for('inicio') }}" class="btn btn-outline-primary btn-sm">Ir al Inicio</a>
             </div>
         </div>
     </div>
