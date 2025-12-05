@@ -56,6 +56,16 @@ def admin_required(f):
     return decorated_function
 
 
+def empleado_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not current_user.is_empleado:
+            flash('Acceso denegado. Se requieren permisos de empleado.', 'danger')
+            return redirect(url_for('inicio'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 def init_database():
     """Inicializa la base de datos con tipos de usuario por defecto"""
     db.create_all()
@@ -228,8 +238,19 @@ def registro():
 def admin_panel():
     usuarios = Usuario.query.all()
     tipos = TipoUsuario.query.all()
-    productos =Producto.query.all()
-    return render_template('admin/panel.html', usuarios=usuarios, tipos=tipos, productos=productos)
+    productos = Producto.query.all()
+    clientes = Cliente.query.all()
+    empleados = Empleado.query.all()
+    insumos = Insumo.query.all()
+    pedidos = Pedido.query.all()
+    return render_template('admin/panel.html', 
+                         usuarios=usuarios, 
+                         tipos=tipos, 
+                         productos=productos,
+                         clientes=clientes,
+                         empleados=empleados,
+                         insumos=insumos,
+                         pedidos=pedidos)
 
 
 #CRUD PRODUCTOS
@@ -445,6 +466,217 @@ def eliminar_usuario(id):
     return redirect(url_for('lista_usuarios'))
 
 
+# CRUD CLIENTES
+@app.route('/admin/clientes')
+@login_required
+@admin_required
+def lista_clientes():
+    clientes = Cliente.query.all()
+    return render_template('admin/clientes_lista.html', clientes=clientes)
+
+
+@app.route('/admin/clientes/crear', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def crear_cliente():
+    usuarios = Usuario.query.all()
+    
+    if request.method == 'POST':
+        id_usuario = request.form.get('id_usuario')
+        telefono = request.form.get('telefono', '')
+        
+        # Verificar que el usuario no tenga ya un registro de cliente
+        if Cliente.query.filter_by(id_usuario=id_usuario).first():
+            flash('Este usuario ya tiene un registro de cliente.', 'danger')
+            return redirect(url_for('crear_cliente'))
+        
+        nuevo_cliente = Cliente(
+            id_usuario=int(id_usuario),
+            telefono=telefono
+        )
+        db.session.add(nuevo_cliente)
+        db.session.commit()
+        
+        flash('Cliente creado exitosamente.', 'success')
+        return redirect(url_for('lista_clientes'))
+    
+    return render_template('admin/cliente_form.html', cliente=None, usuarios=usuarios)
+
+
+@app.route('/admin/clientes/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def editar_cliente(id):
+    cliente = Cliente.query.get_or_404(id)
+    usuarios = Usuario.query.all()
+    
+    if request.method == 'POST':
+        cliente.id_usuario = int(request.form.get('id_usuario'))
+        cliente.telefono = request.form.get('telefono', '')
+        db.session.commit()
+        
+        flash('Cliente actualizado.', 'success')
+        return redirect(url_for('lista_clientes'))
+    
+    return render_template('admin/cliente_form.html', cliente=cliente, usuarios=usuarios)
+
+
+@app.route('/admin/clientes/eliminar/<int:id>')
+@login_required
+@admin_required
+def eliminar_cliente(id):
+    cliente = Cliente.query.get_or_404(id)
+    
+    # Verificar que no haya pedidos asociados
+    if cliente.pedidos:
+        flash('No se puede eliminar: el cliente tiene pedidos asociados.', 'danger')
+        return redirect(url_for('lista_clientes'))
+    
+    db.session.delete(cliente)
+    db.session.commit()
+    
+    flash('Cliente eliminado.', 'success')
+    return redirect(url_for('lista_clientes'))
+
+
+# CRUD EMPLEADOS
+@app.route('/admin/empleados')
+@login_required
+@admin_required
+def lista_empleados():
+    empleados = Empleado.query.all()
+    return render_template('admin/empleados_lista.html', empleados=empleados)
+
+
+@app.route('/admin/empleados/crear', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def crear_empleado():
+    usuarios = Usuario.query.all()
+    
+    if request.method == 'POST':
+        id_usuario = request.form.get('id_usuario')
+        puesto = request.form.get('puesto', '')
+        
+        # Verificar que el usuario no tenga ya un registro de empleado
+        if Empleado.query.filter_by(id_usuario=id_usuario).first():
+            flash('Este usuario ya tiene un registro de empleado.', 'danger')
+            return redirect(url_for('crear_empleado'))
+        
+        nuevo_empleado = Empleado(
+            id_usuario=int(id_usuario),
+            puesto=puesto
+        )
+        db.session.add(nuevo_empleado)
+        db.session.commit()
+        
+        flash('Empleado creado exitosamente.', 'success')
+        return redirect(url_for('lista_empleados'))
+    
+    return render_template('admin/empleado_form.html', empleado=None, usuarios=usuarios)
+
+
+@app.route('/admin/empleados/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def editar_empleado(id):
+    empleado = Empleado.query.get_or_404(id)
+    usuarios = Usuario.query.all()
+    
+    if request.method == 'POST':
+        empleado.id_usuario = int(request.form.get('id_usuario'))
+        empleado.puesto = request.form.get('puesto', '')
+        db.session.commit()
+        
+        flash('Empleado actualizado.', 'success')
+        return redirect(url_for('lista_empleados'))
+    
+    return render_template('admin/empleado_form.html', empleado=empleado, usuarios=usuarios)
+
+
+@app.route('/admin/empleados/eliminar/<int:id>')
+@login_required
+@admin_required
+def eliminar_empleado(id):
+    empleado = Empleado.query.get_or_404(id)
+    
+    # Verificar que no haya seguimientos asociados
+    if empleado.seguimientos:
+        flash('No se puede eliminar: el empleado tiene seguimientos de pedidos asociados.', 'danger')
+        return redirect(url_for('lista_empleados'))
+    
+    db.session.delete(empleado)
+    db.session.commit()
+    
+    flash('Empleado eliminado.', 'success')
+    return redirect(url_for('lista_empleados'))
+
+
+# CRUD INSUMOS
+@app.route('/admin/insumos')
+@login_required
+@admin_required
+def lista_insumos():
+    insumos = Insumo.query.all()
+    return render_template('admin/insumos_lista.html', insumos=insumos)
+
+
+@app.route('/admin/insumos/crear', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def crear_insumo():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        descripcion = request.form.get('descripcion', '')
+        cantidad = int(request.form.get('cantidad', 0))
+        unidad = request.form.get('unidad', '')
+        
+        nuevo_insumo = Insumo(
+            nombre=nombre,
+            descripcion=descripcion,
+            cantidad=cantidad,
+            unidad=unidad
+        )
+        db.session.add(nuevo_insumo)
+        db.session.commit()
+        
+        flash('Insumo creado exitosamente.', 'success')
+        return redirect(url_for('lista_insumos'))
+    
+    return render_template('admin/insumo_form.html', insumo=None)
+
+
+@app.route('/admin/insumos/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def editar_insumo(id):
+    insumo = Insumo.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        insumo.nombre = request.form.get('nombre')
+        insumo.descripcion = request.form.get('descripcion', '')
+        insumo.cantidad = int(request.form.get('cantidad', 0))
+        insumo.unidad = request.form.get('unidad', '')
+        db.session.commit()
+        
+        flash('Insumo actualizado.', 'success')
+        return redirect(url_for('lista_insumos'))
+    
+    return render_template('admin/insumo_form.html', insumo=insumo)
+
+
+@app.route('/admin/insumos/eliminar/<int:id>')
+@login_required
+@admin_required
+def eliminar_insumo(id):
+    insumo = Insumo.query.get_or_404(id)
+    db.session.delete(insumo)
+    db.session.commit()
+    
+    flash('Insumo eliminado.', 'success')
+    return redirect(url_for('lista_insumos'))
+
+
 # ==================== PEDIDOS ====================
 
 @app.route('/pedidos')
@@ -608,6 +840,241 @@ def actualizar_pedido(id):
     
     estados = ['pendiente', 'en_proceso', 'en_produccion', 'listo', 'enviado', 'entregado', 'cancelado']
     return render_template('admin/pedido_actualizar.html', pedido=pedido, estados=estados)
+
+
+# ==================== PANEL DE EMPLEADO ====================
+
+@app.route('/empleado_panel')
+@login_required
+@empleado_required
+def empleado_panel():
+    productos = Producto.query.all()
+    pedidos = Pedido.query.order_by(Pedido.fecha.desc()).limit(10).all()
+    return render_template('empleado/panel.html', productos=productos, pedidos=pedidos)
+
+
+# Empleado - Productos (CRUD completo)
+@app.route('/empleado/productos')
+@login_required
+@empleado_required
+def empleado_lista_productos():
+    productos = Producto.query.all()
+    return render_template('empleado/productos_lista.html', productos=productos)
+
+
+@app.route('/empleado/productos/crear', methods=['GET', 'POST'])
+@login_required
+@empleado_required
+def empleado_crear_producto():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        descripcion = request.form.get('descripcion', '')
+        precio = float(request.form.get('precio', 0))
+        stock = int(request.form.get('stock', 0))
+        
+        nuevo_producto = Producto(
+            nombre=nombre,
+            descripcion=descripcion,
+            precio=precio,
+            stock=stock
+        )
+        db.session.add(nuevo_producto)
+        db.session.commit()
+        
+        flash('Producto creado exitosamente.', 'success')
+        return redirect(url_for('empleado_lista_productos'))
+    
+    return render_template('empleado/producto_form.html', producto=None)
+
+
+@app.route('/empleado/productos/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+@empleado_required
+def empleado_editar_producto(id):
+    producto = Producto.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        producto.nombre = request.form.get('nombre')
+        producto.descripcion = request.form.get('descripcion', '')
+        producto.precio = float(request.form.get('precio', 0))
+        producto.stock = int(request.form.get('stock', 0))
+        db.session.commit()
+        
+        flash('Producto actualizado.', 'success')
+        return redirect(url_for('empleado_lista_productos'))
+    
+    return render_template('empleado/producto_form.html', producto=producto)
+
+
+@app.route('/empleado/productos/eliminar/<int:id>')
+@login_required
+@empleado_required
+def empleado_eliminar_producto(id):
+    producto = Producto.query.get_or_404(id)
+    db.session.delete(producto)
+    db.session.commit()
+    
+    flash('Producto eliminado.', 'success')
+    return redirect(url_for('empleado_lista_productos'))
+
+
+# Empleado - Pedidos (CRUD completo)
+@app.route('/empleado/pedidos')
+@login_required
+@empleado_required
+def empleado_lista_pedidos():
+    pedidos = Pedido.query.order_by(Pedido.fecha.desc()).all()
+    return render_template('empleado/pedidos_lista.html', pedidos=pedidos)
+
+
+@app.route('/empleado/pedidos/crear', methods=['GET', 'POST'])
+@login_required
+@empleado_required
+def empleado_crear_pedido():
+    clientes = Cliente.query.all()
+    productos = Producto.query.all()
+    
+    if request.method == 'POST':
+        id_cliente = request.form.get('id_cliente')
+        fecha = datetime.utcnow()
+        estado = request.form.get('estado', 'pendiente')
+        
+        nuevo_pedido = Pedido(
+            id_cliente=int(id_cliente),
+            fecha=fecha,
+            estado=estado
+        )
+        db.session.add(nuevo_pedido)
+        db.session.flush()
+        
+        # Agregar detalles del pedido si se proporcionaron
+        productos_seleccionados = request.form.getlist('productos[]')
+        cantidades = request.form.getlist('cantidades[]')
+        
+        for i, prod_id in enumerate(productos_seleccionados):
+            if prod_id and i < len(cantidades) and cantidades[i]:
+                detalle = DetallePedido(
+                    id_pedido=nuevo_pedido.id_pedido,
+                    id_producto=int(prod_id),
+                    cantidad=int(cantidades[i])
+                )
+                db.session.add(detalle)
+        
+        # Crear seguimiento inicial
+        empleado = Empleado.query.filter_by(id_usuario=current_user.id_usuario).first()
+        seguimiento = SeguimientoPedido(
+            id_pedido=nuevo_pedido.id_pedido,
+            fecha=datetime.utcnow(),
+            estado=estado,
+            id_empleado=empleado.id_empleado if empleado else None,
+            comentario='Pedido creado por empleado'
+        )
+        db.session.add(seguimiento)
+        db.session.commit()
+        
+        flash('Pedido creado exitosamente.', 'success')
+        return redirect(url_for('empleado_lista_pedidos'))
+    
+    return render_template('empleado/pedido_form.html', pedido=None, clientes=clientes, productos=productos)
+
+
+@app.route('/empleado/pedidos/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+@empleado_required
+def empleado_editar_pedido(id):
+    pedido = Pedido.query.get_or_404(id)
+    clientes = Cliente.query.all()
+    productos = Producto.query.all()
+    
+    if request.method == 'POST':
+        pedido.id_cliente = int(request.form.get('id_cliente'))
+        pedido.estado = request.form.get('estado')
+        
+        # Actualizar detalles si se proporcionaron
+        # Eliminar detalles existentes
+        DetallePedido.query.filter_by(id_pedido=pedido.id_pedido).delete()
+        
+        # Agregar nuevos detalles
+        productos_seleccionados = request.form.getlist('productos[]')
+        cantidades = request.form.getlist('cantidades[]')
+        
+        for i, prod_id in enumerate(productos_seleccionados):
+            if prod_id and i < len(cantidades) and cantidades[i]:
+                detalle = DetallePedido(
+                    id_pedido=pedido.id_pedido,
+                    id_producto=int(prod_id),
+                    cantidad=int(cantidades[i])
+                )
+                db.session.add(detalle)
+        
+        # Crear seguimiento de la actualización
+        empleado = Empleado.query.filter_by(id_usuario=current_user.id_usuario).first()
+        seguimiento = SeguimientoPedido(
+            id_pedido=pedido.id_pedido,
+            fecha=datetime.utcnow(),
+            estado=pedido.estado,
+            id_empleado=empleado.id_empleado if empleado else None,
+            comentario='Pedido actualizado por empleado'
+        )
+        db.session.add(seguimiento)
+        db.session.commit()
+        
+        flash('Pedido actualizado.', 'success')
+        return redirect(url_for('empleado_lista_pedidos'))
+    
+    return render_template('empleado/pedido_form.html', pedido=pedido, clientes=clientes, productos=productos)
+
+
+@app.route('/empleado/pedidos/eliminar/<int:id>')
+@login_required
+@empleado_required
+def empleado_eliminar_pedido(id):
+    pedido = Pedido.query.get_or_404(id)
+    
+    # Eliminar detalles asociados
+    DetallePedido.query.filter_by(id_pedido=pedido.id_pedido).delete()
+    
+    # Eliminar seguimientos asociados
+    SeguimientoPedido.query.filter_by(id_pedido=pedido.id_pedido).delete()
+    
+    db.session.delete(pedido)
+    db.session.commit()
+    
+    flash('Pedido eliminado.', 'success')
+    return redirect(url_for('empleado_lista_pedidos'))
+
+
+@app.route('/empleado/pedidos/<int:id>/actualizar', methods=['GET', 'POST'])
+@login_required
+@empleado_required
+def empleado_actualizar_estado_pedido(id):
+    pedido = Pedido.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        nuevo_estado = request.form.get('estado')
+        comentario = request.form.get('comentario', '')
+        
+        pedido.estado = nuevo_estado
+        
+        # Obtener empleado actual
+        empleado = Empleado.query.filter_by(id_usuario=current_user.id_usuario).first()
+        
+        # Crear seguimiento
+        seguimiento = SeguimientoPedido(
+            id_pedido=pedido.id_pedido,
+            fecha=datetime.utcnow(),
+            estado=nuevo_estado,
+            id_empleado=empleado.id_empleado if empleado else None,
+            comentario=comentario
+        )
+        db.session.add(seguimiento)
+        db.session.commit()
+        
+        flash('Estado del pedido actualizado.', 'success')
+        return redirect(url_for('empleado_lista_pedidos'))
+    
+    estados = ['pendiente', 'en_proceso', 'en_produccion', 'listo', 'enviado', 'entregado', 'cancelado']
+    return render_template('empleado/pedido_actualizar.html', pedido=pedido, estados=estados)
 
 
 if __name__ == '__main__':

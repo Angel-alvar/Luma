@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Editar' if pedido else 'Crear' }} Pedido | Luma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estiloinicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/headerfooter.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+</head>
+<body>
+{% include 'header.html' %}
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1><i class="fas fa-shopping-cart"></i> {{ 'Editar' if pedido else 'Crear' }} Pedido</h1>
+        <a href="{{ url_for('empleado_lista_pedidos') }}" class="btn btn-light btn-sm mt-2">
+            <i class="fas fa-arrow-left"></i> Volver a la Lista
+        </a>
+    </div>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="admin-card">
+        <form method="post">
+            <div class="mb-3">
+                <label for="id_cliente" class="form-label">Cliente</label>
+                <select class="form-select" id="id_cliente" name="id_cliente" required>
+                    <option value="">Seleccionar cliente...</option>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id_cliente }}" 
+                            {% if pedido and pedido.id_cliente == cliente.id_cliente %}selected{% endif %}>
+                        {{ cliente.usuario.nombre if cliente.usuario else 'N/A' }} - {{ cliente.usuario.correo if cliente.usuario else '' }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="estado" class="form-label">Estado</label>
+                <select class="form-select" id="estado" name="estado" required>
+                    <option value="pendiente" {% if pedido and pedido.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                    <option value="en_proceso" {% if pedido and pedido.estado == 'en_proceso' %}selected{% endif %}>En Proceso</option>
+                    <option value="en_produccion" {% if pedido and pedido.estado == 'en_produccion' %}selected{% endif %}>En Producción</option>
+                    <option value="listo" {% if pedido and pedido.estado == 'listo' %}selected{% endif %}>Listo</option>
+                    <option value="enviado" {% if pedido and pedido.estado == 'enviado' %}selected{% endif %}>Enviado</option>
+                    <option value="entregado" {% if pedido and pedido.estado == 'entregado' %}selected{% endif %}>Entregado</option>
+                    <option value="cancelado" {% if pedido and pedido.estado == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Productos del Pedido</label>
+                <div id="productos-container">
+                    {% if pedido and pedido.detalles %}
+                        {% for detalle in pedido.detalles %}
+                        <div class="row mb-2 producto-row">
+                            <div class="col-md-8">
+                                <select class="form-select" name="productos[]">
+                                    <option value="">Seleccionar producto...</option>
+                                    {% for producto in productos %}
+                                    <option value="{{ producto.id_producto }}" {% if detalle.id_producto == producto.id_producto %}selected{% endif %}>
+                                        {{ producto.nombre }} - ${{ producto.precio }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control" name="cantidades[]" 
+                                       placeholder="Cantidad" min="1" value="{{ detalle.cantidad }}">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeProductRow(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="row mb-2 producto-row">
+                            <div class="col-md-8">
+                                <select class="form-select" name="productos[]">
+                                    <option value="">Seleccionar producto...</option>
+                                    {% for producto in productos %}
+                                    <option value="{{ producto.id_producto }}">
+                                        {{ producto.nombre }} - ${{ producto.precio }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control" name="cantidades[]" 
+                                       placeholder="Cantidad" min="1" value="1">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeProductRow(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addProductRow()">
+                    <i class="fas fa-plus"></i> Agregar Producto
+                </button>
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-auth">
+                    <i class="fas fa-save"></i> {{ 'Actualizar' if pedido else 'Crear' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+{% include 'footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script>
+function addProductRow() {
+    const container = document.getElementById('productos-container');
+    const newRow = document.createElement('div');
+    newRow.className = 'row mb-2 producto-row';
+    newRow.innerHTML = `
+        <div class="col-md-8">
+            <select class="form-select" name="productos[]">
+                <option value="">Seleccionar producto...</option>
+                {% for producto in productos %}
+                <option value="{{ producto.id_producto }}">
+                    {{ producto.nombre }} - ${{ producto.precio }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="number" class="form-control" name="cantidades[]" 
+                   placeholder="Cantidad" min="1" value="1">
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeProductRow(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(newRow);
+}
+
+function removeProductRow(button) {
+    const container = document.getElementById('productos-container');
+    const rows = container.getElementsByClassName('producto-row');
+    if (rows.length > 1) {
+        button.closest('.producto-row').remove();
+    } else {
+        alert('Debe haber al menos un producto en el pedido.');
+    }
+}
+</script>
+</body>
+</html>
